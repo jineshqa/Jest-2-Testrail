@@ -28,49 +28,13 @@ class Reporter {
     this.testRailResults = [];
   }
 
-  async createRun(projectId, suiteId) {
-    const now = new Date();
-
-    const options = {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
-      second: '2-digit',
-      hour12: false,
-    };
-
-    let message = 'Automated test run'
-    if (config.RELEASE) {
-      message = config.RELEASE
-    }
-    const suite = await api.getSuite(suiteId);
-    const name = `${suite.name} - ${now.toLocaleString(
-      ['en-GB'],
-      options,
-    )} - (${message})`;
-
+  async createRun(testRun_id) {
     api
-      .addRun(projectId, {
-        suite_id: suiteId,
-        name: name,
-        include_all: false,
-        case_ids: this.caseids,
+      .addResultsForCases(testRun_id, {
+        results: this.testRailResults,
       })
-      .then((r) => {
-        console.log('Created new test run: ' + name);
-        api
-          .addResultsForCases(r.id, {
-            results: this.testRailResults,
-          })
-          .then(api.closeRun(r.id))
-          .then(() => {
-            console.log('Added test results and closed test run');
-          })
-          .catch((error) => {
-            console.log(error.message || error);
-          });
+      .then(() => {
+        console.log('Added test results and closed test run');
       })
       .catch((error) => {
         console.log(error.message || error);
@@ -124,7 +88,7 @@ class Reporter {
         }
       }
     }
-    this.createRun(this._options.project_id, this._options.suite_id);
+    this.createRun(this._options.testRun_id);
   }
 }
 
