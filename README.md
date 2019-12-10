@@ -19,7 +19,7 @@ npm i jest-2-testrail
 
 The Reporter must be specified in the jest-config.js file, under 'reporters'.
 <br>This file should be created in your project's root folder.
-<br>and 'suite_id', which is the id of the suite that should be included in the test run.
+<br>and 'testRun_id', which is the id of the suite that should be included in the test run.
 
 ```javascript
 module.exports = {
@@ -30,7 +30,7 @@ module.exports = {
   transform: { "^.+\\.(t|j)s$": "ts-jest" },
   reporters: [
     "default",
-    ["jest-2-testrail", { suite_id: "1" }]
+    ["jest-2-testrail", { testRun_id: "1" }]
   ]
 };
 ```
